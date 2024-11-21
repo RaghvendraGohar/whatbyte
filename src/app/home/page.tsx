@@ -1,4 +1,4 @@
-'use client';
+'use client';  
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -6,6 +6,7 @@ export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState<{ name: string } | null>(null);
   const [selected, setSelected] = useState('Dashboard');
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -15,7 +16,10 @@ export default function Home() {
       const decoded = JSON.parse(atob(token.split('.')[1]));
       setUser(decoded.name);
     }
+    setLoading(false); // After token check is done, set loading to false
   }, [router]);
+
+  if (loading) return <div>Loading...</div>; // Show a loading message or spinner
 
   if (!user) return null;
 
